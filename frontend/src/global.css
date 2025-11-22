@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* smooth transitions for buttons/inputs */
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Star rating hover effect */
+.hovering .star:hover {
+    color: #2dd4bf;
+    /* aqua accent */
+    cursor: pointer;
+}
