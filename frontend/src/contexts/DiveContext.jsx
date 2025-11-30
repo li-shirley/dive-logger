@@ -6,16 +6,27 @@ export const DiveContext = createContext();
 export const diveReducer = (state, action) => {
     switch (action.type) {
         case 'SET_DIVES':
-        return { ...state, dives: action.payload };
+            return { ...state, dives: action.payload };
+
         case 'CREATE_DIVE':
-        return { ...state, dives: [action.payload, ...(state.dives || [])] };
+            return { ...state, dives: [action.payload, ...(state.dives || [])] };
+
         case 'DELETE_DIVE':
-        return { 
-            ...state, 
-            dives: (state.dives || []).filter(dive => dive._id !== action.payload._id) 
-        };
+            return { 
+                ...state, 
+                dives: (state.dives || []).filter(dive => dive._id !== action.payload._id)
+            };
+
+        case 'UPDATE_DIVE':
+            return {
+                ...state,
+                dives: (state.dives || []).map(dive =>
+                    dive._id === action.payload._id ? action.payload : dive
+                )
+            };
+
         default:
-        return state;
+            return state;
     }
 };
 

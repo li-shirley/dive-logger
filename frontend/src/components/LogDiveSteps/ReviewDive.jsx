@@ -1,10 +1,23 @@
+import { useUnitContext } from "../../hooks/useUnitContext";
+
 const ReviewDiveSummary = ({ form }) => {
+    const { unitSystem } = useUnitContext();
+
     const ENTRY_TYPE_LABELS = { boat: "Boat", shore: "Shore", liveaboard: "Liveaboard", other: "Other" };
     const SURGE_CURRENT_LABELS = { none: "None", light: "Light", medium: "Medium", strong: "Strong" };
-    const TANK_TYPES = { aluminum: "Aluminum", steel: "Steel" };
     const GAS_MIXES = { air: "Air", ean32: "EAN32", ean36: "EAN36", ean40: "EAN40", customNitrox: "Custom Nitrox" };
     const SUIT_TYPE_LABELS = { none: "None", shortie: "Shortie", full: "Full", drysuit: "Drysuit", other: "Other" };
     const WEIGHT_TYPES = { belt: "Belt", integrated: "Integrated", trim: "Trim Pockets", ankle: "Ankle Weights" };
+    const TANKS_SPECS = {
+        AL80: { volumeL: 11, volumeCuFt: 80, pressureBar: 207, pressurePsi: 3000 },
+        AL63: { volumeL: 10, volumeCuFt: 63, pressureBar: 207, pressurePsi: 3000 },
+        AL50: { volumeL: 7.8, volumeCuFt: 50, pressureBar: 207, pressurePsi: 3000 },
+        AL40: { volumeL: 6.3, volumeCuFt: 40, pressureBar: 207, pressurePsi: 3000 },
+        AL30: { volumeL: 4.8, volumeCuFt: 30, pressureBar: 207, pressurePsi: 3000 },
+        Steel100: { volumeL: 15, volumeCuFt: 100, pressureBar: 232, pressurePsi: 3360 },
+        Steel80: { volumeL: 11, volumeCuFt: 80, pressureBar: 232, pressurePsi: 3360 },
+        Steel60: { volumeL: 9, volumeCuFt: 60, pressureBar: 232, pressurePsi: 3360 },
+    };
 
     const renderStars = (rating) => "⭐".repeat(rating || 0);
     const amountUsed = form.startPressureBar && form.endPressureBar ? form.startPressureBar - form.endPressureBar : null;
@@ -23,8 +36,8 @@ const ReviewDiveSummary = ({ form }) => {
                     {form.title && <p><strong>Title:</strong> {form.title}</p>}
                     {form.diveSite && <p><strong>Dive Site:</strong> {form.diveSite}</p>}
                     {form.date && <p><strong>Date:</strong> {form.date}</p>}
-                    {form.maxDepthMeters && <p><strong>Max Depth:</strong> {form.maxDepthMeters} m</p>}
-                    {form.avgDepthMeters && <p><strong>Avg Depth:</strong> {form.avgDepthMeters} m</p>}
+                    {form.maxDepthMeters && <p><strong>Max Depth:</strong> {form.maxDepthMeters}  {unitSystem === "imperial" ? "ft" : "m"}</p>}
+                    {form.avgDepthMeters && <p><strong>Avg Depth:</strong> {form.avgDepthMeters}  {unitSystem === "imperial" ? "ft" : "m"}</p>}
                     {form.bottomTimeMinutes && <p><strong>Bottom Time:</strong> {form.bottomTimeMinutes} min</p>}
                     {form.entryType && <p><strong>Entry Type:</strong> {ENTRY_TYPE_LABELS[form.entryType]}</p>}
                 </div>
@@ -34,25 +47,35 @@ const ReviewDiveSummary = ({ form }) => {
             {(form.visibilityMeters || form.waterTempC || form.airTempC || form.surge || form.current) && (
                 <div className={sectionClass}>
                     <h3 className="font-medium text-ocean-mid mb-2">Conditions</h3>
-                    {form.visibilityMeters && <p><strong>Visibility:</strong> {form.visibilityMeters} m</p>}
-                    {form.waterTempC && <p><strong>Water Temp:</strong> {form.waterTempC} °C</p>}
-                    {form.airTempC && <p><strong>Air Temp:</strong> {form.airTempC} °C</p>}
+                    {form.visibilityMeters && <p><strong>Visibility:</strong> {form.visibilityMeters}   {unitSystem === "imperial" ? "ft" : "m"}</p>}
+                    {form.waterTempC && <p><strong>Water Temp:</strong> {form.waterTempC} {unitSystem === "imperial" ? "°F" : "°C"}</p>}
+                    {form.airTempC && <p><strong>Air Temp:</strong> {form.airTempC} {unitSystem === "imperial" ? "°F" : "°C"}</p>}
                     {form.surge && <p><strong>Surge:</strong> {SURGE_CURRENT_LABELS[form.surge]}</p>}
                     {form.current && <p><strong>Current:</strong> {SURGE_CURRENT_LABELS[form.current]}</p>}
                 </div>
             )}
 
             {/* Tank & Gas */}
-            {(form.tankType || form.internalVolumeLiters || form.ratedPressureBar || form.gasMix) && (
+            {(form.tankLabel || form.gasMix) && (
                 <div className={sectionClass}>
                     <h3 className="font-medium text-ocean-mid mb-2">Tank & Gas</h3>
-                    {form.tankType && <p><strong>Tank Type:</strong> {TANK_TYPES[form.tankType]}</p>}
-                    {form.internalVolumeLiters && <p><strong>Volume:</strong> {form.internalVolumeLiters} L</p>}
-                    {form.ratedPressureBar && <p><strong>Rated Pressure:</strong> {form.ratedPressureBar} bar</p>}
+                    {form.tankLabel && form.tankLabel !== "Other" && (
+                        <p>
+                            <strong>Tank:</strong> {form.tankLabel}  
+                            {unitSystem === "metric"
+                                ? ` (${TANKS_SPECS[form.tankLabel].volumeL} L @ ${TANKS_SPECS[form.tankLabel].pressureBar} bar)`
+                                : ` (${TANKS_SPECS[form.tankLabel].volumeCuFt} cu ft @ ${TANKS_SPECS[form.tankLabel].pressurePsi} psi)`}
+                        </p>
+                    )}
+                    {form.tankLabel === "Other" && (
+                        <p>
+                            <strong>Tank:</strong> {form.customSpecs}
+                        </p>
+                    )}
                     {form.gasMix && <p><strong>Gas Mix:</strong> {GAS_MIXES[form.gasMix]}</p>}
-                    {form.startPressureBar && <p><strong>Start Pressure:</strong> {form.startPressureBar} bar</p>}
-                    {form.endPressureBar && <p><strong>End Pressure:</strong> {form.endPressureBar} bar</p>}
-                    {amountUsed !== null && <p><strong>Amount Used:</strong> {amountUsed} bar</p>}
+                    {form.startPressureBar && <p><strong>Start Pressure:</strong> {form.startPressureBar} {unitSystem === "imperial" ? "psi" : "bar"}</p>}
+                    {form.endPressureBar && <p><strong>End Pressure:</strong> {form.endPressureBar} {unitSystem === "imperial" ? "psi" : "bar"}</p>}
+                    {amountUsed !== null && <p><strong>Amount Used:</strong> {amountUsed} {unitSystem === "imperial" ? "psi" : "bar"}</p>}
                 </div>
             )}
 
@@ -70,7 +93,7 @@ const ReviewDiveSummary = ({ form }) => {
             {form.weightKg && (
                 <div className={sectionClass}>
                     <h3 className="font-medium text-ocean-mid mb-2">Weight</h3>
-                    <p><strong>Weight:</strong> {form.weightKg} kg</p>
+                    <p><strong>Weight:</strong> {form.weightKg} {unitSystem === "imperial" ? "lb" : "kg"}</p>
                     {form.weightType.length > 0 && (
                         <p><strong>Type:</strong> {form.weightType.map(type => WEIGHT_TYPES[type] || type).join(", ")}</p>
                     )}

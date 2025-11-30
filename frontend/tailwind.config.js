@@ -12,7 +12,10 @@ export const theme = {
         light: "#fff8f0",
         mid: "#f0e7e0",
       },
-      coral: "#ff5c49",
+      coral: {
+        mid: "#F88379",
+        deep: "#ff5c49",
+      }
     },
     fontFamily: {
       inter: ["Inter", "sans-serif"],

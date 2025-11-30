@@ -33,6 +33,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/log-dive/:diveId"
+                element={
+                  <ProtectedRoute user={user} loading={loading}>
+                    <LogDive />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
               <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup />} />
             </Routes>

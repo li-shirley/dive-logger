@@ -7,8 +7,6 @@ const NavBar = () => {
     const { logout } = useLogout();
     const { user } = useAuthContext();
 
-    const handleClick = () => logout()
-
     return (
         <header className="bg-gradient-to-b from-ocean-mid to-ocean-light border-b-4 border-ocean-deep">
             <div className="container mx-auto flex items-center justify-between p-4">
@@ -20,16 +18,12 @@ const NavBar = () => {
                     {user ? (
                         <div className="flex items-center gap-4">
                             <span className="text-sand-light font-medium">Hi, {user.email}!</span>
-
-                            <Link
-                                to="/log-dive"
-                                className="px-3 py-1 rounded-md bg-ocean-mid text-sand-light hover:bg-ocean-deep transition-all"
-                            >
-                                Log Dive
+                            <Link to="/">
+                                <h1 className="px-3 py-1 rounded-md bg-ocean-deep text-sand-light hover:bg-ocean-deep transition-all">Home</h1>
                             </Link>
                             <button
-                                onClick={handleClick}
-                                className="px-3 py-1 rounded-md bg-coral text-sand-light hover:bg-[#ff5c49] transition-all"
+                                onClick={logout}
+                                className="px-3 py-1 rounded-md bg-coral-deep text-sand-light hover:bg-[#ff5c49] transition-all"
                             >
                                 Log out
                             </button>

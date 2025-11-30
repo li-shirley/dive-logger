@@ -152,7 +152,6 @@ const deleteDive = async (req, res) => {
 };
 
 // update a dive 
-// todo: handle all possible params
 const updateDive = async (req, res) => {
     const { id } = req.params;
     const { _id: userId } = req.user;
@@ -161,13 +160,79 @@ const updateDive = async (req, res) => {
         return res.status(404).json({ error: 'No such dive found' });
     }
 
-    // only these fields can be updated
-    const { title, diveSite, date, maxDepthMeters, avgDepthMeters, bottomTimeMinutes } = req.body;
+    const {
+        title,
+        diveSite,
+        date,
+        maxDepthMeters,
+        avgDepthMeters,
+        bottomTimeMinutes,
+        entryType,
+        visibilityMeters,
+        waterTempC,
+        airTempC,
+        surge,
+        current,
+        tank,
+        pressure,
+        exposureSuit,
+        weight,
+        rating,
+        lifeSeen,
+        additionalNotes
+    } = req.body;
+
+    // Required fields validation
+    const emptyFields = checkRequiredFields(req.body, [
+        'title',
+        'diveSite',
+        'date',
+        'maxDepthMeters',
+        'bottomTimeMinutes',
+        'entryType',
+    ]);
+
+    if (emptyFields.length > 0) {
+        return res.status(400).json({
+            error: 'Please fill in all required fields',
+            emptyFields
+        });
+    }
+
+    // Compute amountUsedBar if pressure exists
+    let computedPressure = pressure || null;
+    if (pressure?.startPressureBar != null && pressure?.endPressureBar != null) {
+        computedPressure = {
+            startPressureBar: pressure.startPressureBar,
+            endPressureBar: pressure.endPressureBar,
+            amountUsedBar: pressure.startPressureBar - pressure.endPressureBar
+        };
+    }
 
     try {
         const dive = await Dive.findOneAndUpdate(
             { _id: id, userId },
-            { title, diveSite, date, maxDepthMeters, avgDepthMeters, bottomTimeMinutes },
+            {
+                title,
+                diveSite,
+                date,
+                maxDepthMeters,
+                avgDepthMeters,
+                bottomTimeMinutes,
+                entryType,
+                visibilityMeters,
+                waterTempC,
+                airTempC,
+                surge,
+                current,
+                tank,
+                pressure: computedPressure,
+                exposureSuit,
+                weight,
+                rating,
+                lifeSeen,
+                additionalNotes
+            },
             { new: true }
         );
 
@@ -177,7 +242,7 @@ const updateDive = async (req, res) => {
 
         res.status(200).json(dive);
     } catch (error) {
-        console.error(error);
+        console.error('Error updating dive:', error);
         res.status(500).json({ error: 'Server error while updating the dive' });
     }
 };

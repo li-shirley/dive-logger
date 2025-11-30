@@ -23,21 +23,25 @@ const LifeSeenSchema = new mongoose.Schema({
 }, { _id: false });
 
 const TankSchema = new mongoose.Schema({
-    tankType: {
+    tankLabel: {
         type: String,
-        enum: ["aluminum", "steel"],
-    },          
-    internalVolumeLiters: { 
-        type: Number, // liters
-    }, 
-    ratedPressureBar: { 
-        type: Number, // bar
-    },     
+        enum: [
+            "AL80", "AL63", "AL50", "AL40", "AL30",
+            "Steel100", "Steel80", "Steel60",
+            "Other"
+        ],
+    },
+    customSpecs: {
+        type: String,
+        required: function() {
+            return this.tankLabel === "Other";
+        },
+        trim: true,
+    },
     gasMix: {
         type: String,
         enum: ["air", "ean32", "ean36", "ean40", "customNitrox"],
     },
-
 }, { _id: false });
 
 const PressureSchema = new mongoose.Schema({
@@ -55,7 +59,7 @@ const PressureSchema = new mongoose.Schema({
 const ExposureSuitSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ["shortie", "full", "drysuit", "other"],
+        enum: ["none", "shortie", "full", "drysuit", "other"],
     },
     thicknessMm: { 
         type: Number // mm - 3, 5, 7, etc
