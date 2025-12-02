@@ -1,15 +1,26 @@
-export async function apiFetch(url, options = {}, dispatch) {
-    const response = await fetch(url, options);
+export const apiFetch = async (
+    url,
+    options = {},
+    { user, refreshToken, dispatch } = {},
+    retry = true
+) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(user?.token && { Authorization: `Bearer ${user.token}` }),
+        ...options.headers,
+    };
 
-    // If token expired or unauthorized:
-    if (response.status === 401) {
-        // Clear local auth
-        localStorage.removeItem("user");
-        dispatch({ type: "LOGOUT" });
+    const res = await fetch(url, { ...options, headers, credentials: 'include' });
 
-        alert("Your session has expired. Please log in again.");
-        return null;
+    if (res.status === 401 && retry && refreshToken) {
+        const newToken = await refreshToken();
+        if (newToken) {
+            // Retry original request with new token
+            const updatedUser = { ...user, token: newToken };
+            return apiFetch(url, options, { user: updatedUser, refreshToken, dispatch }, false);
+        }
     }
 
-    return response;
-}
+    const json = await res.json().catch(() => ({}));
+    return { res, json };
+};

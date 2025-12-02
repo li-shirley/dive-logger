@@ -20,7 +20,7 @@ const LogDive = ({ dive: initialDive }) => {
 
     const [dive, setDive] = useState(location.state?.dive || initialDive || null);
 
-    const { user, dispatch: authDispatch } = useAuthContext();
+    const { user, dispatch: authDispatch, refreshToken: authRefreshToken } = useAuthContext();
     const { dispatch: diveDispatch } = useDiveContext();
     const { unitSystem } = useUnitContext();
 
@@ -38,22 +38,28 @@ const LogDive = ({ dive: initialDive }) => {
     const StepComponent = steps[currentStep];
 
     useEffect(() => {
-        if (diveId && !dive) {
-            // fetch the dive if not passed via state
+        if (diveId && !dive && user) {
             const fetchDive = async () => {
                 try {
-                    const res = await apiFetch(`/api/dives/${diveId}`);
+                    const { res, json } = await apiFetch(
+                        `/api/dives/${diveId}`,
+                        {},
+                        { user, refreshToken: authRefreshToken, dispatch: authDispatch }
+                    );
+
                     if (res.ok) {
-                        const json = await res.json();
                         setDive(json);
+                    } else {
+                        console.error('Failed to fetch dive:', json.error);
                     }
                 } catch (err) {
-                    console.error(err);
+                    console.error('Error fetching dive:', err);
                 }
             };
             fetchDive();
         }
-    }, [diveId, dive]);
+    }, [diveId, dive, user, authRefreshToken, authDispatch]);
+
 
     const isEdit = Boolean(dive);
 
@@ -83,6 +89,7 @@ const LogDive = ({ dive: initialDive }) => {
         "entryType",
     ];
 
+    // for displaying error
     const fieldLabels = {
         title: "Dive Title",
         diveSite: "Dive Site",
@@ -163,6 +170,7 @@ const LogDive = ({ dive: initialDive }) => {
             title: form.title,
             diveSite: form.diveSite,
             date: form.date,
+            time: form.time,
 
             maxDepthMeters,
             avgDepthMeters,
@@ -208,22 +216,16 @@ const LogDive = ({ dive: initialDive }) => {
         };
 
         try {
-            const response = await apiFetch(
+            const { res, json } = await apiFetch(
                 isEdit ? `/api/dives/${dive._id}` : "/api/dives",
                 {
                     method: isEdit ? "PATCH" : "POST",
                     body: JSON.stringify(body),
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${user.token}`,
-                    },
                 },
-                authDispatch
+                { user, refreshToken: authRefreshToken, dispatch: authDispatch }
             );
 
-            const json = await response.json();
-
-            if (!response.ok) {
+            if (!res.ok) {
                 setError(json.error || "Failed to submit.");
                 setIsLoading(false);
                 setShowErrorModal(true);
@@ -242,7 +244,7 @@ const LogDive = ({ dive: initialDive }) => {
         } catch (err) {
             console.error(err);
             setError("A network or server error occurred.");
-            setIsLoading(false);  
+            setIsLoading(false);
             setShowErrorModal(true);
 
         }
@@ -260,7 +262,7 @@ const LogDive = ({ dive: initialDive }) => {
                     onSubmit={handleSubmit}
                     isLoading={isLoading}
                     missingFields={missingFields}
-                    isEdit={isEdit} 
+                    isEdit={isEdit}
                 />
 
                 {/* Error Validation Message */}
@@ -368,6 +370,7 @@ const getEmptyForm = (unitSystem) => ({
     title: "",
     diveSite: "",
     date: "",
+    time: "",
     maxDepthMeters: "",
     avgDepthMeters: "",
     bottomTimeMinutes: "",
@@ -399,7 +402,8 @@ const prefillDiveForm = (dive, unitSystem) => {
     return {
         title: dive.title || "",
         diveSite: dive.diveSite || "",
-        date: dive.date?.split("T")[0] || "",
+        date: dive.date || "",
+        time: dive.time || "",
 
         maxDepthMeters: dive.maxDepthMeters
             ? usesImperial

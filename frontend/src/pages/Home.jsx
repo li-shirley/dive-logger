@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useDiveContext } from '../hooks/useDiveContext';
@@ -10,8 +10,10 @@ import { apiFetch } from '../utils/api';
 
 const Home = () => {
     const { dives, dispatch: diveDispatch } = useDiveContext();
-    const { user, dispatch: authDispatch } = useAuthContext();
+    const { user, dispatch: authDispatch, refreshToken: authRefreshToken } = useAuthContext();
     const { unitSystem, dispatch } = useUnitContext();
+
+    const fetchedRef = useRef(false);
 
     const toggleUnits = () => {
         dispatch({
@@ -21,33 +23,26 @@ const Home = () => {
     };
 
     useEffect(() => {
+        if (!user || fetchedRef.current) return;
+
         const fetchDives = async () => {
-            if (!user) return;
-
             try {
-                const response = await apiFetch('/api/dives', {
-                    headers: {
-                        'Authorization': `Bearer ${user.token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }, authDispatch);
+                const { res, json } = await apiFetch('/api/dives', {}, {
+                    user,
+                    refreshToken: authRefreshToken,
+                    dispatch: authDispatch
+                });
 
-                if (!response) return;
-
-                const json = await response.json();
-
-                if (response.ok) {
+                if (res.ok) {
                     diveDispatch({ type: 'SET_DIVES', payload: json });
-                } else {
-                    console.error('Failed to fetch dives:', json.error);
+                    fetchedRef.current = true; // mark as fetched
                 }
-            } catch (error) {
-                console.error('Network error fetching dives:', error);
+            } catch (err) {
+                console.error(err);
             }
         };
-
         fetchDives();
-    }, [user, authDispatch, diveDispatch]);
+    }, [user, authDispatch, diveDispatch, authRefreshToken]);
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-8">

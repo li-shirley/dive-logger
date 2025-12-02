@@ -2,25 +2,25 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const diveRoutes = require('./routes/dive')
 const userRoutes = require('./routes/user')
+
 const logger = require('./middleware/logger')
 
 const app = express()
 
-/*
-todo: handle CORS (currently using proxy in vite config)
-const cors = require("cors");
-
+// todo: handle CORS (currently using proxy in vite config)
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true
 }));
-*/
 
 // middleware 
 app.use(express.json())
+app.use(cookieParser())
 app.use(logger)
 
 // routes

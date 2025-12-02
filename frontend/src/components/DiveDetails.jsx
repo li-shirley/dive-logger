@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 import { useDiveContext } from '../hooks/useDiveContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useUnitContext } from "../hooks/useUnitContext";
 
 import { apiFetch } from '../utils/api';
-import { metersToFeet, kgToLbs, cToF, barToPsi } from "../utils/unitConversions";
+import { metersToFeet, kgToLbs, cToF, barToPsi, formatTime12h, formatDate } from "../utils/unitConversions";
 
 
 const ENTRY_TYPE_LABELS = { boat: "Boat", shore: "Shore", liveaboard: "Liveaboard", other: "Other" };
@@ -21,7 +21,7 @@ const DiveDetails = ({ dive }) => {
     const navigate = useNavigate();
 
     const { dispatch: diveDispatch } = useDiveContext();
-    const { user } = useAuthContext();
+    const { user, dispatch: authDispatch, refreshToken: authRefreshToken } = useAuthContext();
     const { unitSystem } = useUnitContext();
 
     const [isDeleting, setIsDeleting] = useState(false);
@@ -76,15 +76,15 @@ const DiveDetails = ({ dive }) => {
         setError(null);
 
         try {
-            const response = await apiFetch(`/api/dives/${dive._id}`, {
-                method: 'DELETE',
-                headers: { Authorization: `Bearer ${user.token}` },
-            });
+            const { res, json } = await apiFetch(
+                `/api/dives/${dive._id}`,
+                { method: 'DELETE' },
+                { user, refreshToken: authRefreshToken, dispatch: authDispatch }
+            );
 
-            if (response.ok) {
+            if (res.ok) {
                 diveDispatch({ type: 'DELETE_DIVE', payload: dive });
             } else {
-                const json = await response.json();
                 setError(json.error || 'Failed to delete dive');
             }
         } catch (err) {
@@ -103,7 +103,13 @@ const DiveDetails = ({ dive }) => {
             <div className="flex justify-between items-start">
                 <div>
                     <h4 className="text-ocean-deep font-semibold text-lg">{dive.title}</h4>
-                    <p className="text-gray-700 text-sm">{format(new Date(dive.date), "MMM d, yyyy")}</p>
+                    <div className="text-gray-700 text-sm flex items-center gap-2">
+                        {dive.date && <span>{formatDate(dive.date)}</span>}
+                        {dive.date && dive.time && <span>at</span>}
+                        {dive.time && <span>{formatTime12h(dive.time)}</span>}
+                    </div>
+
+
                 </div>
 
                 <div className="flex gap-2">

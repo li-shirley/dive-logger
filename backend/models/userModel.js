@@ -10,61 +10,66 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
-    password: 
+    password:
     {
-        type: String, 
+        type: String,
         required: true,
+    },
+    refreshToken: { 
+        type: String,
+        default: null,
     }
 })
 
 // static signup method
 userSchema.statics.signup = async function (email, password) {
     // validation 
-    if(!email || !password){
+    if (!email || !password) {
         throw Error('All fields must be filled in')
-    } 
+    }
 
     email = email.toLowerCase().trim();
-    if(!validator.isEmail(email)){
+    if (!validator.isEmail(email)) {
         throw Error('Email is not valid')
     }
     if (password.length < 8) {
         throw Error('Password must be at least 8 characters long')
     }
-    if(!validator.isStrongPassword(password)){
+    if (!validator.isStrongPassword(password)) {
         throw Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
     }
 
-    const exists = await this.findOne({email})
+    const exists = await this.findOne({ email })
 
-    if(exists){
+    if (exists) {
         throw Error('Email already in use')
     }
 
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const user = await this.create({email, password: hash})
+    const user = await this.create({ email, password: hash })
 
     return user
 }
 
 // static login method
-userSchema.statics.login =  async function(email, password){
+userSchema.statics.login = async function (email, password) {
     // validation
-        if(!email || !password){
+    if (!email || !password) {
         throw Error('All fields must be filled in')
-    } 
+    }
 
-    const user = await this.findOne({email})
+    email = email.toLowerCase().trim();
+    const user = await this.findOne({ email })
 
-    if(!user){
-        throw Error('Invalid login credentials') 
+    if (!user) {
+        throw Error('Invalid login credentials')
     }
 
     const match = await bcrypt.compare(password, user.password)
 
-    if(!match){
+    if (!match) {
         throw Error('Invalid login credentials')
     }
 
