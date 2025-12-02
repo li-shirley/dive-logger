@@ -4,10 +4,12 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
     const today = new Date().toISOString().split("T")[0];
     const { unitSystem, dispatch } = useUnitContext();
 
+    // for error styling
     const getInputClass = (fieldName) =>
-        missingFields.includes(fieldName)
-            ? "border-red-500 focus:border-red-500 focus:ring-red-200"
-            : "border-gray-300 focus:border-ocean-mid focus:ring-ocean-light";
+        `w-full p-3 rounded border focus:outline-none ${missingFields.includes(fieldName)
+            ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-200"
+            : "border-gray-300 focus:border-ocean-mid focus:ring-1 focus:ring-ocean-light"
+        }`;
 
     const depthUnit = unitSystem === "imperial" ? "ft" : "m";
 
@@ -57,49 +59,91 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {/* Title, Site, Date */}
-                {[
-                    { label: "Dive Title*", name: "title", type: "text", placeholder: "e.g. Morning Shore Dive" },
-                    { label: "Dive Site*", name: "diveSite", type: "text", placeholder: "e.g. La Jolla Cove" },
-                    { label: "Date*", name: "date", type: "date", max: today },
-                ].map(field => (
-                    <div key={field.name} className="flex flex-col gap-2">
-                        <label className="text-gray-700 font-medium">{field.label}</label>
-                        <input
-                            type={field.type}
-                            name={field.name}
-                            value={form[field.name]}
-                            max={field.max}
-                            placeholder={field.placeholder}
-                            onChange={handleChange}
-                            className={`w-full p-3 rounded ${getInputClass(field.name)}`}
-                        />
-                    </div>
-                ))}
-
-                {/* Depths */}
-                {[
-                    { label: "Max Depth*", name: "maxDepthMeters" },
-                    { label: "Average Depth", name: "avgDepthMeters" },
-                ].map(field => (
-                    <div key={field.name} className="flex flex-col gap-2 relative">
-                        <label className="text-gray-700 font-medium">{field.label}</label>
-                        <div className="relative">
-                            <input
-                                type="number"
-                                name={field.name}
-                                value={form[field.name]}
-                                onChange={handleChange}
-                                placeholder={`e.g. ${field.label === "Max Depth*" ? "60" : "40"}`}
-                                className={`w-full p-3 pr-14 rounded ${getInputClass(field.name)}`}
-                            />
-                            <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">{depthUnit}</span>
-                        </div>
-                    </div>
-                ))}
-
-                {/* Bottom time */}
+                {/* Title */}
                 <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-medium">Dive Title*</label>
+                    <input
+                        type="text"
+                        name="title"
+                        value={form.title}
+                        placeholder="e.g. Morning Shore Dive"
+                        onChange={handleChange}
+                        className={getInputClass("title")}
+                    />
+                </div>
+
+                {/* Dive Site */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-medium">Dive Site*</label>
+                    <input
+                        type="text"
+                        name="diveSite"
+                        value={form.diveSite}
+                        placeholder="e.g. La Jolla Cove"
+                        onChange={handleChange}
+                        className={getInputClass("diveSite")}
+                    />
+                </div>
+
+                {/* Date */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-medium">Date*</label>
+                    <input
+                        type="date"
+                        name="date"
+                        value={form.date}
+                        max={today}
+                        onChange={handleChange}
+                        className={getInputClass("date")}
+                    />
+                </div>
+
+                {/* Time */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-medium">Time</label>
+                    <input
+                        type="time"
+                        name="time"
+                        value={form.time || ""}
+                        onChange={handleChange}
+                        className={getInputClass("time")}
+                    />
+                </div>
+
+                {/* Max Depth */}
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-gray-700 font-medium">Max Depth*</label>
+                    <div className="relative">
+                        <input
+                            type="number"
+                            name="maxDepthMeters"
+                            value={form.maxDepthMeters}
+                            onChange={handleChange}
+                            placeholder="e.g. 60"
+                            className={getInputClass("maxDepthMeters")}
+                        />
+                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">{depthUnit}</span>
+                    </div>
+                </div>
+
+                {/* Average Depth */}
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-gray-700 font-medium">Average Depth</label>
+                    <div className="relative">
+                        <input
+                            type="number"
+                            name="avgDepthMeters"
+                            value={form.avgDepthMeters}
+                            onChange={handleChange}
+                            placeholder="e.g. 40"
+                            className={getInputClass("avgDepthMeters")}
+                        />
+                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">{depthUnit}</span>
+                    </div>
+                </div>
+
+                {/* Bottom Time */}
+                <div className="flex flex-col gap-2 relative">
                     <label className="text-gray-700 font-medium">Bottom Time*</label>
                     <div className="relative">
                         <input
@@ -108,28 +152,29 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                             value={form.bottomTimeMinutes}
                             onChange={handleChange}
                             placeholder="e.g. 42"
-                            className={`w-full p-3 pr-14 rounded ${getInputClass("bottomTimeMinutes")}`}
+                            className={getInputClass("bottomTimeMinutes")}
                         />
                         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">min</span>
                     </div>
                 </div>
-            </div>
 
-            {/* Entry type */}
-            <div className="flex flex-col gap-2">
-                <label className="text-gray-700 font-medium">Entry Type*</label>
-                <select
-                    name="entryType"
-                    value={form.entryType}
-                    onChange={handleChange}
-                    className={`w-full p-3 rounded ${getInputClass("entryType")}`}
-                >
-                    <option value="">Select entry type</option>
-                    <option value="boat">Boat</option>
-                    <option value="shore">Shore</option>
-                    <option value="liveaboard">Liveaboard</option>
-                    <option value="other">Other</option>
-                </select>
+                {/* Entry Type */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-medium">Entry Type*</label>
+                    <select
+                        name="entryType"
+                        value={form.entryType}
+                        onChange={handleChange}
+                        className={getInputClass("entryType")}
+                    >
+                        <option value="">Select entry type</option>
+                        <option value="boat">Boat</option>
+                        <option value="shore">Shore</option>
+                        <option value="liveaboard">Liveaboard</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
             </div>
         </div>
     );

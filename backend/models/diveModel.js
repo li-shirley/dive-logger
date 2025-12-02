@@ -95,9 +95,13 @@ const DiveSchema = new mongoose.Schema({
         required: true 
     },
     date: { 
-        type: Date, 
+        type: String, // as string (YYYY-MM-DD) to preserve local entry / UTC conversion
         required: true 
-    }, 
+    },
+    time: {
+        type: String, // Optional time as string (HH:mm)
+        required: false
+    },
     maxDepthMeters: { 
         type: Number, // meters
         required: true

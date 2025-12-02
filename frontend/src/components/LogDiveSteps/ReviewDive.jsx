@@ -1,4 +1,5 @@
 import { useUnitContext } from "../../hooks/useUnitContext";
+import { formatTime12h } from "../../utils/unitConversions";
 
 const ReviewDiveSummary = ({ form }) => {
     const { unitSystem } = useUnitContext();
@@ -36,6 +37,9 @@ const ReviewDiveSummary = ({ form }) => {
                     {form.title && <p><strong>Title:</strong> {form.title}</p>}
                     {form.diveSite && <p><strong>Dive Site:</strong> {form.diveSite}</p>}
                     {form.date && <p><strong>Date:</strong> {form.date}</p>}
+                    {form.time && (
+                        <p><strong>Time:</strong> {formatTime12h(form.time)}</p>
+                    )}
                     {form.maxDepthMeters && <p><strong>Max Depth:</strong> {form.maxDepthMeters}  {unitSystem === "imperial" ? "ft" : "m"}</p>}
                     {form.avgDepthMeters && <p><strong>Avg Depth:</strong> {form.avgDepthMeters}  {unitSystem === "imperial" ? "ft" : "m"}</p>}
                     {form.bottomTimeMinutes && <p><strong>Bottom Time:</strong> {form.bottomTimeMinutes} min</p>}
@@ -61,7 +65,7 @@ const ReviewDiveSummary = ({ form }) => {
                     <h3 className="font-medium text-ocean-mid mb-2">Tank & Gas</h3>
                     {form.tankLabel && form.tankLabel !== "Other" && (
                         <p>
-                            <strong>Tank:</strong> {form.tankLabel}  
+                            <strong>Tank:</strong> {form.tankLabel}
                             {unitSystem === "metric"
                                 ? ` (${TANKS_SPECS[form.tankLabel].volumeL} L @ ${TANKS_SPECS[form.tankLabel].pressureBar} bar)`
                                 : ` (${TANKS_SPECS[form.tankLabel].volumeCuFt} cu ft @ ${TANKS_SPECS[form.tankLabel].pressurePsi} psi)`}

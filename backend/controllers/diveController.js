@@ -9,7 +9,7 @@ const getDives = async (req, res) => {
         const dives = await Dive.find({ userId }).sort({ createdAt: -1 });
         res.status(200).json(dives);
     } catch (error) {
-        console.error(error); // todo: logger for debugging
+        console.error(error); 
         res.status(500).json({ error: 'Server error while fetching dives' });
     }
 };
@@ -50,6 +50,7 @@ const createDive = async (req, res) => {
         title,
         diveSite,
         date,
+        time,
         maxDepthMeters,
         avgDepthMeters,
         bottomTimeMinutes,
@@ -104,6 +105,7 @@ const createDive = async (req, res) => {
             title,
             diveSite,
             date,
+            time,
             maxDepthMeters,
             avgDepthMeters,
             entryType,
@@ -164,6 +166,7 @@ const updateDive = async (req, res) => {
         title,
         diveSite,
         date,
+        time,
         maxDepthMeters,
         avgDepthMeters,
         bottomTimeMinutes,
@@ -216,6 +219,7 @@ const updateDive = async (req, res) => {
                 title,
                 diveSite,
                 date,
+                time,
                 maxDepthMeters,
                 avgDepthMeters,
                 bottomTimeMinutes,

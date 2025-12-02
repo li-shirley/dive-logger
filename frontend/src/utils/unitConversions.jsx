@@ -11,3 +11,21 @@ export const lbsToKg = (lbs) => format1(lbs / 2.20462);
 
 export const barToPsi = (bar) => format1(bar * 14.5038);
 export const psiToBar = (psi) => format1(psi / 14.5038);
+
+export const formatTime12h = (time24) => {
+    if (!time24) return "";
+
+    const [hourStr, minuteStr] = time24.split(":");
+    let hour = parseInt(hourStr, 10);
+    const minute = minuteStr;
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12; // convert military time to 12hr
+    return `${hour}:${minute} ${ampm}`;
+};
+
+export const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const [year, month, day] = dateStr.split("-");
+    const monthName = new Date(0, month - 1).toLocaleString("en-US", { month: "long" });
+    return `${monthName} ${parseInt(day)}, ${year}`;
+};
