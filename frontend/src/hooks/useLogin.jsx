@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
+import { apiFetch } from '../utils/api'
 
 export const useLogin = () => {
     const [error, setError] = useState(null)
@@ -10,16 +11,12 @@ export const useLogin = () => {
         setIsLoading(true)
         setError(null)
 
-        const response = await fetch('/api/user/login', {
+        const { res, json } = await apiFetch('/api/user/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password }),
         })
 
-        const json = await response.json() 
-
-        if (!response.ok) {
+        if (!res.ok) {
             setIsLoading(false);
             setError(json.error);
             return;

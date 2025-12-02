@@ -103,6 +103,7 @@ const EquipmentAndAir = ({ form, handleChange }) => {
                             value={form.startPressureBar}
                             onChange={handleChange}
                             placeholder={`e.g. ${unitSystem === "imperial" ? "3000" : "200"}`}
+                            min={0} 
                             className="w-full p-3 pr-14 rounded"
                         />
                         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
@@ -121,6 +122,7 @@ const EquipmentAndAir = ({ form, handleChange }) => {
                             value={form.endPressureBar}
                             onChange={handleChange}
                             placeholder={`e.g. ${unitSystem === "imperial" ? "700" : "50"}`}
+                            min={0} 
                             className="w-full p-3 pr-14 rounded"
                         />
                         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
@@ -129,7 +131,7 @@ const EquipmentAndAir = ({ form, handleChange }) => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Estimated Use */}
             {usedPressure !== "" && (
                 <p className="mt-2 text-gray-600">
@@ -172,6 +174,7 @@ const EquipmentAndAir = ({ form, handleChange }) => {
                                 value={form.thicknessMm}
                                 onChange={handleChange}
                                 placeholder="e.g. 3 / 5 / 7"
+                                min={0} 
                                 className="w-full p-3 pr-14 rounded"
                             />
                             <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
@@ -202,19 +205,22 @@ const EquipmentAndAir = ({ form, handleChange }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* Weight */}
-                <div className="flex flex-col gap-2 relative">
+                <div className="flex flex-col gap-2">
                     <label className="text-gray-700 font-medium">Weight</label>
-                    <input
-                        type="number"
-                        name="weightKg"
-                        value={form.weightKg}
-                        onChange={handleChange}
-                        placeholder="e.g. 6"
-                        className="w-full p-3 pr-14 rounded"
-                    />
-                    <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
-                        {unitSystem === "imperial" ? "lb" : "kg"}
-                    </span>
+                    <div className="relative">
+                        <input
+                            type="number"
+                            name="weightKg"
+                            value={form.weightKg}
+                            onChange={handleChange}
+                            placeholder="e.g. 6"
+                            min={0} 
+                            className="w-full p-3 pr-14 rounded"
+                        />
+                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
+                            {unitSystem === "imperial" ? "lb" : "kg"}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Weight Type */}

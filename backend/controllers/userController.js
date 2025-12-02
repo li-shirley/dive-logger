@@ -1,5 +1,5 @@
-const User = require('../models/userModel')
-const jwt = require('jsonwebtoken')
+import User from '../models/userModel.js';
+import jwt from 'jsonwebtoken';
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -20,7 +20,7 @@ const createRefreshToken = (_id) => {
 }
 
 // signup user
-const signupUser = async (req, res) => {
+export const signupUser = async (req, res) => {
     const { email, password } = req.body
     const emailNormalized = email.trim().toLowerCase();
 
@@ -50,7 +50,7 @@ const signupUser = async (req, res) => {
 }
 
 // login user
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
     const { email, password } = req.body
     const emailNormalized = email.trim().toLowerCase();
 
@@ -77,7 +77,7 @@ const loginUser = async (req, res) => {
 }
 
 // refresh token
-const refreshAccessToken = async (req, res) => {
+export const refreshAccessToken = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.status(401).json({ error: "No refresh token" });
 
@@ -107,7 +107,7 @@ const refreshAccessToken = async (req, res) => {
 
 
 // logout user
-const logoutUser = async (req, res) => {
+export const logoutUser = async (req, res) => {
     const cookies = req.cookies;
 
     if (!cookies?.jwt) return res.sendStatus(204); // No content
@@ -127,11 +127,4 @@ const logoutUser = async (req, res) => {
     });
 
     res.sendStatus(204);
-};
-
-module.exports = {
-    signupUser,
-    loginUser,
-    refreshAccessToken,
-    logoutUser
 };

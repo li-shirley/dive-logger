@@ -1,6 +1,6 @@
-const express = require('express')
-const { getDives, getOneDive, createDive, deleteDive, updateDive } = require('../controllers/diveController')
-const requireAuth = require('../middleware/requireAuth')
+import express from 'express';
+import { getDives, getOneDive, createDive, deleteDive, updateDive } from '../controllers/diveController.js';
+import requireAuth from '../middleware/requireAuth.js';
 
 const router = express.Router()
 
@@ -23,4 +23,4 @@ router.delete('/:id', deleteDive)
 router.patch('/:id', updateDive)
 
 
-module.exports = router
+export default router

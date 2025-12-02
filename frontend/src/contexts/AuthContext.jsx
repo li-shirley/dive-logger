@@ -47,8 +47,10 @@ export const AuthContextProvider = ({ children }) => {
 
     // Refresh token function
     const refreshToken = async () => {
+        const API_BASE = import.meta.env.VITE_API_URL;
+
         try {
-            const res = await fetch('/api/user/refresh', {
+            const res = await fetch(`${API_BASE}/api/user/refresh`, {
                 method: 'POST',
                 credentials: 'include', // sends httpOnly cookie
             });

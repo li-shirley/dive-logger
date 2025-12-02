@@ -6,7 +6,7 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
 
     // for error styling
     const getInputClass = (fieldName) =>
-        `w-full p-3 rounded border focus:outline-none ${missingFields.includes(fieldName)
+        `w-full p-3 pr-14 rounded border focus:outline-none ${missingFields.includes(fieldName)
             ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-200"
             : "border-gray-300 focus:border-ocean-mid focus:ring-1 focus:ring-ocean-light"
         }`;
@@ -111,7 +111,7 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                 </div>
 
                 {/* Max Depth */}
-                <div className="flex flex-col gap-2 relative">
+                <div className="flex flex-col gap-2">
                     <label className="text-gray-700 font-medium">Max Depth*</label>
                     <div className="relative">
                         <input
@@ -119,10 +119,11 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                             name="maxDepthMeters"
                             value={form.maxDepthMeters}
                             onChange={handleChange}
-                            placeholder="e.g. 60"
+                            placeholder={unitSystem === "imperial" ? "e.g. 60" : "e.g. 20"}
+                            min={0} 
                             className={getInputClass("maxDepthMeters")}
                         />
-                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">{depthUnit}</span>
+                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 select-none">{depthUnit}</span>
                     </div>
                 </div>
 
@@ -135,10 +136,11 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                             name="avgDepthMeters"
                             value={form.avgDepthMeters}
                             onChange={handleChange}
-                            placeholder="e.g. 40"
+                            placeholder={unitSystem === "imperial" ? "e.g. 60" : "e.g. 20"}
+                            min={0} 
                             className={getInputClass("avgDepthMeters")}
                         />
-                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">{depthUnit}</span>
+                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 select-none">{depthUnit}</span>
                     </div>
                 </div>
 
@@ -152,9 +154,10 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                             value={form.bottomTimeMinutes}
                             onChange={handleChange}
                             placeholder="e.g. 42"
+                            min={0}
                             className={getInputClass("bottomTimeMinutes")}
                         />
-                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">min</span>
+                        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 select-none">min</span>
                     </div>
                 </div>
 

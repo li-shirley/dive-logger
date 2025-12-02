@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const LifeSeenSchema = new mongoose.Schema({
     group: {
@@ -177,4 +177,4 @@ const DiveSchema = new mongoose.Schema({
 DiveSchema.index({ userId: 1, date: -1 });
 
 
-module.exports = mongoose.model("Dive", DiveSchema);
+export default mongoose.model("Dive", DiveSchema);

@@ -21,6 +21,7 @@ const DiveConditions = ({ form, handleChange }) => {
                             value={form.visibilityMeters}
                             onChange={handleChange}
                             placeholder={unitSystem === "imperial" ? "e.g. 40" : "e.g. 12"}
+                            min={0}
                             className="w-full p-3 pr-14 rounded border border-gray-300 focus:border-ocean-mid focus:ring-ocean-light"
                         />
                         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 select-none">

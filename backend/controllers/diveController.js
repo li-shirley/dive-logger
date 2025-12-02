@@ -1,8 +1,8 @@
-const Dive = require('../models/diveModel')
-const mongoose = require('mongoose')
+import Dive from '../models/diveModel.js';
+import mongoose from 'mongoose';
 
 // get all dives
-const getDives = async (req, res) => {
+export const getDives = async (req, res) => {
     const { _id: userId } = req.user;
 
     try {
@@ -16,7 +16,7 @@ const getDives = async (req, res) => {
 
 
 // get single dive
-const getOneDive = async (req, res) => {
+export const getOneDive = async (req, res) => {
     const { id } = req.params;
     const { _id: userId } = req.user;
 
@@ -45,7 +45,7 @@ const checkRequiredFields = (body, required) => {
 };
 
 // create a new dive
-const createDive = async (req, res) => {
+export const createDive = async (req, res) => {
     const {
         title,
         diveSite,
@@ -133,7 +133,7 @@ const createDive = async (req, res) => {
 };
 
 // delete a dive
-const deleteDive = async (req, res) => {
+export const deleteDive = async (req, res) => {
     const { id } = req.params;
     const { _id: userId } = req.user;
 
@@ -154,7 +154,7 @@ const deleteDive = async (req, res) => {
 };
 
 // update a dive 
-const updateDive = async (req, res) => {
+export const updateDive = async (req, res) => {
     const { id } = req.params;
     const { _id: userId } = req.user;
 
@@ -250,11 +250,3 @@ const updateDive = async (req, res) => {
         res.status(500).json({ error: 'Server error while updating the dive' });
     }
 };
-
-module.exports = {
-    getDives,
-    getOneDive,
-    createDive,
-    deleteDive,
-    updateDive
-}
