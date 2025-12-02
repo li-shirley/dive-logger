@@ -3,9 +3,10 @@ import { useAuthContext } from './useAuthContext'
 import { apiFetch } from '../utils/api'
 
 export const useLogin = () => {
+    const { dispatch } = useAuthContext()
+
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(null)
-    const { dispatch } = useAuthContext()
 
     const login = async (email, password) => {
         setIsLoading(true)
