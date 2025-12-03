@@ -40,6 +40,7 @@ export const signupUser = async (req, res) => {
             httpOnly: true,
             secure: isProduction,
             sameSite: isProduction ? "none" : "lax",
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -67,6 +68,7 @@ export const loginUser = async (req, res) => {
             httpOnly: true,
             secure: isProduction,
             sameSite: isProduction ? "none" : "lax",
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -123,7 +125,8 @@ export const logoutUser = async (req, res) => {
     res.clearCookie("jwt", {
         httpOnly: true,
         secure: isProduction,
-        sameSite: isProduction ? "none" : "lax"
+        sameSite: isProduction ? "none" : "lax",
+        path: "/",  
     });
 
     res.sendStatus(204);
