@@ -22,5 +22,4 @@ router.delete('/:id', deleteDive)
 // UPDATE a dive
 router.patch('/:id', updateDive)
 
-
 export default router

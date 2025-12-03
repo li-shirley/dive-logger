@@ -153,7 +153,7 @@ const DiveSchema = new mongoose.Schema({
         type: ExposureSuitSchema 
     },
 
-    // Metadata
+    // Misc data
     rating: { 
         type: Number, 
         min: 1, 
