@@ -28,7 +28,7 @@ Dive Logger is a full-stack web app for recreational scuba divers to log, track,
     # or
     npm start
     ```
-4. API will run on http://localhost:<PORT> (default 4000).
+4. API will run on http://localhost:4000 by default, or on the port you set in the PORT environment variable.
 
 ---
 
@@ -50,7 +50,8 @@ All dive endpoints require the user to be logged in. Include the access token in
                 "maxDepthMeters": 18,
                 "bottomTimeMinutes": 50,
                 "entryType": "boat"
-            }
+            },
+            "...more dives..."
         ]
     ```
 
@@ -190,8 +191,8 @@ All dive endpoints require the user to be logged in. Include the access token in
 
 - **POST /api/user/login**  
     Login an existing user.
-    Request Body: same as signup
-    Response: same as signup
+    Request Body: same as signup.
+    Response: same as signup.
     Sets a refresh token as HTTP-only cookie.
 
 - **POST /api/user/refresh**  
@@ -354,6 +355,7 @@ A User has:
   - Kg to/from Lbs  
   - °C to/from °F  
   - Bar to/from Psi  
+  
 - `apiFetch.jsx` centralizes API requests with:  
   - JSON headers  
   - Auth token handling  
