@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import Masonry from 'react-masonry-css';
 
 import { useDiveContext } from '../hooks/useDiveContext';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -43,6 +44,12 @@ const Home = () => {
         };
         fetchDives();
     }, [user, authDispatch, diveDispatch, authRefreshToken]);
+
+    const breakpointColumns = {
+        default: 3,
+        1024: 2,
+        640: 1
+    };
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-8">
@@ -94,11 +101,17 @@ const Home = () => {
 
 
             {dives?.length > 0 ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
+                <Masonry
+                    breakpointCols={breakpointColumns}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
+                >
                     {dives.map(dive => (
                         <DiveDetails key={dive._id} dive={dive} />
                     ))}
-                </div>
+                </Masonry>
+
+
             ) : (
                 <p className="text-center text-ocean-mid text-lg font-medium mt-12">
                     No dives logged yet. Click "Log Dive" to log your first dive!

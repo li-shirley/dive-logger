@@ -28,3 +28,12 @@
 .animate-fadeIn {
     animation: fadeIn .15s ease-out;
 }
+
+.my-masonry-grid {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.my-masonry-grid_column>* {
+    margin-bottom: 1.5rem;
+}
