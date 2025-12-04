@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import NotFound from "./pages/NotFound";
 import { useAuthContext } from './hooks/useAuthContext'
 import NavBar from './components/NavBar'
 import Login from './pages/Login'
@@ -16,6 +17,7 @@ function App() {
 
         <main className="flex-1 flex flex-col gap-8 px-4 md:px-8">
           <div className="max-w-[1200px] w-full mx-auto flex-1 flex flex-col gap-8">
+            {/* Home Page / Dive Dashboard */}
             <Routes>
               <Route
                 path="/"
@@ -25,6 +27,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Log new dive */}
               <Route
                 path="/log-dive"
                 element={
@@ -33,6 +37,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Edit an existing dive */}
               <Route
                 path="/log-dive/:diveId"
                 element={
@@ -41,8 +47,13 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Login & Signup */}
               <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
               <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup />} />
+
+              {/* 404 Page */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </main>
