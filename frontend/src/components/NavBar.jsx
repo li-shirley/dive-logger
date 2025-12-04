@@ -17,7 +17,6 @@ const NavBar = () => {
                 <nav className="flex items-center gap-4">
                     {user ? (
                         <div className="flex items-center gap-4">
-                            <span className="text-sand-light font-medium">Hi, {user.email}!</span>
                             <Link to="/">
                                 <h1 className="px-3 py-1 rounded-md bg-ocean-deep text-sand-light hover:bg-ocean-deep transition-all">Home</h1>
                             </Link>

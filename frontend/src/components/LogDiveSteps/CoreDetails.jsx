@@ -13,11 +13,11 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
 
     const depthUnit = unitSystem === "imperial" ? "ft" : "m";
 
-    const toggleUnits = () => {
+    const setUnitSystem = (unit) => {
         if (isEdit) return;
         dispatch({
             type: "SET_UNIT_SYSTEM",
-            payload: unitSystem === "metric" ? "imperial" : "metric"
+            payload: unit
         });
     };
 
@@ -25,31 +25,34 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
         <div className="step w-full max-w-3xl mx-auto flex flex-col gap-6 bg-sand-light p-6 rounded-xl shadow-md">
             <h3 className="text-ocean-deep text-xl font-semibold">Core Dive Info</h3>
 
-            <div className="flex items-center gap-3 justify-start">
-                <span className="text-gray-700 font-medium">Unit System:</span>
+            <div className="flex items-center gap-3">
+                <span className="text-gray-700 font-medium">Log dive using:</span>
 
                 {!isEdit ? (
                     // Toggle when logging new dive
-                    <button
-                        onClick={toggleUnits}
-                        className="relative w-44 h-10 rounded-full flex items-center bg-sand-mid cursor-pointer select-none"
-                    >
-                        <span
-                            className={`absolute top-0 left-0 w-1/2 h-full bg-ocean-deep rounded-full shadow-md transition-transform ${unitSystem === "imperial" ? "translate-x-full" : ""
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setUnitSystem('metric')}
+                            className={`px-4 py-2 rounded-md border ${unitSystem === 'metric'
+                                    ? 'bg-ocean-mid text-white border-ocean-mid'
+                                    : 'bg-white border-gray-300 text-gray-700 font-medium'
                                 }`}
-                        ></span>
+                        >
+                            Metric
+                        </button>
 
-                        <span className="relative z-10 w-full flex justify-between px-4 text-sm font-semibold">
-                            <span className={unitSystem === "metric" ? "text-sand-mid" : "text-ocean-deep"}>
-                                Metric
-                            </span>
-                            <span className={unitSystem === "imperial" ? "text-sand-mid" : "text-ocean-deep"}>
-                                Imperial
-                            </span>
-                        </span>
-                    </button>
+                        <button
+                            onClick={() => setUnitSystem('imperial')}
+                            className={`px-4 py-2 rounded-md border ${unitSystem === 'imperial'
+                                    ? 'bg-ocean-mid text-white border-ocean-mid'
+                                    : 'bg-white border-gray-300 text-gray-700 font-medium'
+                                }`}
+                        >
+                            Imperial
+                        </button>
+                    </div>
                 ) : (
-                    // Does not toggle on edit
+                    // Does not allow change of units on edit
                     <div className="relative text-m font-semibold text-ocean-deep">
                         <span className="text-ocean-mid capitalize">{unitSystem}</span>
                     </div>
@@ -120,7 +123,7 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                             value={form.maxDepthMeters}
                             onChange={handleChange}
                             placeholder={unitSystem === "imperial" ? "e.g. 60" : "e.g. 20"}
-                            min={0} 
+                            min={0}
                             className={getInputClass("maxDepthMeters")}
                         />
                         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 select-none">{depthUnit}</span>
@@ -137,7 +140,7 @@ const CoreDetails = ({ form, handleChange, missingFields = [], isEdit }) => {
                             value={form.avgDepthMeters}
                             onChange={handleChange}
                             placeholder={unitSystem === "imperial" ? "e.g. 60" : "e.g. 20"}
-                            min={0} 
+                            min={0}
                             className={getInputClass("avgDepthMeters")}
                         />
                         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 select-none">{depthUnit}</span>

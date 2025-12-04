@@ -46,7 +46,8 @@ const Home = () => {
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-8">
-            <div className="flex items-center gap-3 justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {/* Unit system */}
                 <div className="flex items-center gap-3">
                     <span className="text-gray-700 font-medium">Unit System:</span>
 
@@ -60,19 +61,37 @@ const Home = () => {
                         ></span>
 
                         <span className="relative z-10 w-full flex justify-between px-4 text-sm font-semibold">
-                            <span className={unitSystem === "metric" ? "text-sand-mid" : "text-ocean-deep"}>Metric</span>
-                            <span className={unitSystem === "imperial" ? "text-sand-mid" : "text-ocean-deep"}>Imperial</span>
+                            <span
+                                className={
+                                    unitSystem === "metric"
+                                        ? "text-sand-mid"
+                                        : "text-ocean-deep"
+                                }
+                            >
+                                Metric
+                            </span>
+                            <span
+                                className={
+                                    unitSystem === "imperial"
+                                        ? "text-sand-mid"
+                                        : "text-ocean-deep"
+                                }
+                            >
+                                Imperial
+                            </span>
                         </span>
                     </button>
                 </div>
 
+                {/* Log Dive button */}
                 <Link
                     to="/log-dive"
-                    className="px-3 py-1 rounded-md bg-ocean-mid text-sand-light hover:bg-ocean-deep transition-all"
+                    className="px-3 py-1 rounded-md bg-ocean-mid text-sand-light hover:bg-ocean-deep transition-all self-start sm:self-auto"
                 >
                     Log Dive
                 </Link>
             </div>
+
 
             {dives?.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
@@ -82,7 +101,7 @@ const Home = () => {
                 </div>
             ) : (
                 <p className="text-center text-ocean-mid text-lg font-medium mt-12">
-                    No dives logged yet.
+                    No dives logged yet. Click "Log Dive" to log your first dive!
                 </p>
             )}
         </div>
